@@ -10,6 +10,7 @@ function htmlValue(data) {
 }
 
 function createHeatmap(data) {
+  console.log(data)
   const tooltip = d3.select("body").append("div")
                    .attr("class", "tooltip")
                    .style("opacity", 0);
@@ -40,6 +41,6 @@ function createHeatmap(data) {
 }
 
 d3.json('/assets/data/premature-mortality-3.geojson').then((data) => {
-  console.log(data);
+  //console.log(data);
   createHeatmap(data);
 })
