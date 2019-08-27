@@ -1,14 +1,10 @@
-const projection2 = d3.geoAlbers()
+const asthmaProjection = d3.geoAlbers()
   .scale(50000)
   .rotate([71.057, 0])
   .center([0, 42.475])
   .translate([960 / 2, 500 / 2]);
 
-//{"cartodb_id":2,"municipal":"Acton","right_muni_id":2,"right_municipal":"Acton","right_cal_years":"2008-2012","right_yasth_arte":77.76}}
-//Municipality
-//Age-adjusted rate per 100,000
-//Year
-function htmlValue2(data) {
+function asthmaHtmlValue(data) {
   if (data.properties.right_yasth_arte){
     return data.properties.municipal + '<br />' + 'Age-adjusted rate per 100,000: ' + data.properties.right_yasth_arte + '<br /> Year: ' + data.properties.right_cal_years
   }
@@ -17,27 +13,24 @@ function htmlValue2(data) {
   }
 }
 
-// function htmlValue2(data) {
-//   return data.properties.municipal + '<br />' + 'Years: ' + data.properties.right_years + '<br /> Value: ' + data.properties.right_all_art
-// }
-
-
-function createHeatmap2(data) {
+function asthmaCreateHeatmap(data) {
   const tooltip = d3.select("body").append("div")
                    .attr("class", "tooltip")
                    .style("opacity", 0);
-  const colors = d3.scaleSequentialQuantile()
+                  
+  const colors = d3.scaleSequentialQuantile([50.6,495])
       .interpolator(d3.interpolateRdPu)
       .domain(data.features.map(feature => (feature.properties.right_all_art)));
+      console.log(colors)
   const youthAsthma = d3.select('.youth-asthma-map');
-  const path = d3.geoPath().projection(projection2);
+  const path = d3.geoPath().projection(asthmaProjection);
  youthAsthma.append('g')
     .attr('class', 'heatmap')
     .selectAll('path')
     .data(data.features)
     .enter()
     .append('path')
-    .attr('fill', d => colors(d.properties.right_all_art))
+    .attr('fill', d => colors(d.properties.right_yasth_arte))
     .attr('stroke', '#ffffff')
     .attr('stroke-width', '1')
     .attr('stroke-opacity', 0.6)
@@ -46,7 +39,7 @@ function createHeatmap2(data) {
         tooltip.transition()
         .duration(200)
         .style("opacity", .9);
-        tooltip.html(htmlValue2(d))
+        tooltip.html(asthmaHtmlValue(d))
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
       }) ;
@@ -54,5 +47,5 @@ function createHeatmap2(data) {
 
 d3.json('/assets/data/youth-asthma-hosp.geojson').then((data) => {
   console.log(data);
-  createHeatmap2(data);
+  asthmaCreateHeatmap(data);
 })
