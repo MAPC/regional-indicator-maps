@@ -1,5 +1,5 @@
 const hypertensionProjection = d3.geoAlbers()
-  .scale(18000)
+  .scale(19000)
   .rotate([71.057, 0])
   .center([-0.55, 42.38])
   .translate([960 / 2, 500 / 2]);
@@ -50,10 +50,14 @@ function hypertensionCreateHeatmap(data) {
         tooltip.html(hypertensionHtmlValue(d))
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
-      }) ;
+      })
+    .on("mouseleave", d => {
+      tooltip.transition()
+      .duration(200)
+      .style("opacity",0)
+    })
 }
 
-d3.json('/assets/data/hypertension-hospitalization-rate.geojson').then((data) => {
-  console.log(data);
+d3.json('/assets/data/hypertension-hospitalization-rate.json').then((data) => {
   hypertensionCreateHeatmap(data);
 })

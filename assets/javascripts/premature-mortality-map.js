@@ -6,11 +6,18 @@ const projection = d3.geoAlbers()
 
 
 function htmlValue(data) {
-  return data.properties.municipal + '<br />' + 'Years: ' + data.properties.right_years + '<br /> Value: ' + data.properties.right_all_art
+  const windowWithData = '<p class="info-window__section"><span class="info-window__category">Municipality</span><br />' 
+  + data.properties.municipal
+  + '</p> <p class="info-window__section"><span class="info-window__category">Age-adjusted rate per 100,000</span><br />'
+  + data.properties.right_all_art
+  + '</p> <p class="info-window__section"><span class="info-window__category">Years</span><br />'
+  + data.properties.right_years
+  + '</p>'
+
+  return windowWithData
 }
 
 function createHeatmap(data) {
-  console.log(data)
   const tooltip = d3.select("body").append("div")
                    .attr("class", "tooltip")
                    .style("opacity", 0);
@@ -37,10 +44,14 @@ function createHeatmap(data) {
         tooltip.html(htmlValue(d))
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
-      }) ;
+      })
+      .on("mouseleave", d => {
+        tooltip.transition()
+        .duration(200)
+        .style("opacity",0)
+      })
 }
 
-d3.json('/assets/data/premature-mortality-3.geojson').then((data) => {
-  //console.log(data);
+d3.json('/assets/data/premature-mortality.json').then((data) => {
   createHeatmap(data);
 })
