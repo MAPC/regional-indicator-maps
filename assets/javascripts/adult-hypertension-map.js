@@ -6,8 +6,19 @@ const hypertensionProjection = d3.geoAlbers()
 
 
 function hypertensionHtmlValue(data) {
-    if (data.properties.right_hyp_arte) { return 'Municipality: ' + data.properties.municipal + '<br />' + 'Year: ' + data.properties.right_cal_years + '<br /> Value: ' + data.properties.right_hyp_arte }
-    else { return 'Municipality: ' + data.properties.municipal }
+  const windowWithData = '<p class="info-window__section"><span class="info-window__category">Municipality</span><br />' 
+  + data.properties.municipal 
+  + '</p> <p class="info-window__section"><span class="info-window__category">Year</span><br />'
+  + data.properties.right_cal_years
+  + '</p> <p class="info-window__section"><span class="info-window__category">Age-adjusted rate per 100,000</span><br />'
+  + data.properties.right_hyp_arte
+  + '</p>'
+
+  const windowWithoutData = '<p class="info-window__section"><span class="info-window__category">Municipality (no data)</span><br />' 
+  + data.properties.municipal 
+
+    if (data.properties.right_hyp_arte) { return windowWithData }
+    else { return windowWithoutData }
 }
 function hypertensionCreateHeatmap(data) {
 
