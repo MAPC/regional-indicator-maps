@@ -1,3 +1,5 @@
+import * as legend from './legend.js'
+
 const asthmaProjection = d3.geoAlbers()
 .scale(19000)
 .rotate([71.057, 0])
@@ -42,13 +44,13 @@ function asthmaCreateHeatmap(data) {
     .attr('stroke-width', '1')
     .attr('stroke-opacity', 0.6)
     .attr('d', path)
-    .on("mouseover", (d) => {
+    .on("mousemove", (d) => {
       tooltip.transition()
-      .duration(200)
+      .duration(50)
       .style("opacity", .9);
       tooltip.html(asthmaHtmlValue(d))
-      .style("left", (d3.event.pageX) + "px")
-      .style("top", (d3.event.pageY - 28) + "px");
+      .style("left", (d3.event.pageX + 10) + "px")
+        .style("top", (d3.event.pageY + 10) + "px");
       }) 
     .on("mouseleave", d => {
       tooltip.transition()
@@ -74,13 +76,13 @@ function createBasemap(data) {
       .attr('stroke-width', '1')
       .attr('stroke-opacity', 0.6)
       .attr('d', path)
-      .on("mouseover", (d) => {
+      .on("mousemove", (d) => {
         tooltip.transition()
-        .duration(200)
+        .duration(50)
         .style("opacity", .9);
         tooltip.html(asthmaHtmlValue(d))
-        .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 28) + "px");
+        .style("left", (d3.event.pageX + 10) + "px")
+        .style("top", (d3.event.pageY + 10) + "px");
         }) 
       .on("mouseleave", d => {
         tooltip.transition()
@@ -89,10 +91,13 @@ function createBasemap(data) {
       })
 }
 
-
 d3.json('/assets/data/base-map.json').then((data) => {
   createBasemap(data);
   d3.json('/assets/data/youth-asthma-hosp.json').then((data) => {
+    const legendVariable = "right_yasth_arte"
+    const title = "Youth Asthma Hospitalization Rate"
+    const subtitle = "Age-Adjusted Rate per 100,000"
     asthmaCreateHeatmap(data);
+    legend.addLegend(data, legendVariable, title, subtitle)
   })
 })

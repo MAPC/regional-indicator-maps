@@ -1,3 +1,5 @@
+import * as legend from './legend.js'
+
 const highSchoolProjection = d3.geoAlbers()
     .scale(19000)
     .rotate([71.057, 0])
@@ -41,13 +43,13 @@ function highSchoolCreateHeatmap(data){
             .attr('stroke-width','1')
             .attr('stroke-opacity', 0.6)
             .attr('d', path)
-            .on("mouseover", d => {
+            .on("mousemove", d => {
                 tooltip.transition()
-                .duration(200)
+                .duration(50)
                 .style("opacity",.9)
                 tooltip.html(highSchoolHtmlValue(d))
-                .style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY - 28) + "px")
+                .style("left", (d3.event.pageX + 10) + "px")
+                .style("top", (d3.event.pageY + 10) + "px");
             })
             .on("mouseleave", d => {
                 tooltip.transition()
@@ -93,6 +95,10 @@ function createBasemap(data) {
 d3.json('/assets/data/base-map.json').then((data) => {
   createBasemap(data);
   d3.json('/assets/data/Graduation_Rates_by_Districts.json').then(data => {
+    const legendVariable = "right_all_grad_p"
+    const title = "Graduation Rates by Districts"
+    const subtitle = "% 4-year High School Graduation"
     highSchoolCreateHeatmap(data)
+    legend.addLegend(data, legendVariable, title, subtitle)
   })
 })

@@ -1,3 +1,5 @@
+import * as legend from './legend.js'
+
 const hypertensionProjection = d3.geoAlbers()
   .scale(19000)
   .rotate([71.057, 0])
@@ -43,13 +45,13 @@ function hypertensionCreateHeatmap(data) {
     .attr('stroke-width', '1')
     .attr('stroke-opacity', 0.6)
     .attr('d', path)
-    .on("mouseover", (d) => {
+    .on("mousemove", (d) => {
         tooltip.transition()
-        .duration(200)
+        .duration(50)
         .style("opacity", .9);
         tooltip.html(hypertensionHtmlValue(d))
-        .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 28) + "px");
+        .style("left", (d3.event.pageX + 10) + "px")
+        .style("top", (d3.event.pageY + 10) + "px");
       })
     .on("mouseleave", d => {
       tooltip.transition()
@@ -59,5 +61,9 @@ function hypertensionCreateHeatmap(data) {
 }
 
 d3.json('/assets/data/hypertension-hospitalization-rate.json').then((data) => {
+  const legendProperty = "right_hyp_arte"
+  const title = "Hypertension Hospitalizations"
+  const subtitle = "Age-Adjusted Rate per 100,000"
   hypertensionCreateHeatmap(data);
+  legend.addLegend(data, legendProperty, title, subtitle)
 })
