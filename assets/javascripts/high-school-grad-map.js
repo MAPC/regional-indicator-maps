@@ -7,20 +7,20 @@ const highSchoolProjection = d3.geoAlbers()
     .translate([960 / 2, 500 / 2])
 
 function highSchoolHtmlValue(data){
-    const windowWithData = '<p class="info-window__section"><span class="info-window__category">District</span><br />' 
-    + data.properties.right_district
-    + '</p> <p class="info-window__section"><span class="info-window__category">4-Year High School Graduation Rate</span><br />'
-    + data.properties.right_all_grad_p
-    + '</p> <p class="info-window__section"><span class="info-window__category">School Year</span><br />'
-    + data.properties.right_schoolyear
-    + '</p>'
-
-    const windowWithoutData = '<p class="info-window__section"><span class="info-window__category">Municipality (no data)</span><br />' 
-    + data.properties.municipal
-    + '</p>'
-
-    if (data.properties.right_all_grad_p) { return windowWithData }
-    else { return windowWithoutData }
+    if (data.properties.right_all_grad_p) { 
+      return '<p class="info-window__section"><span class="info-window__category">District</span><br />' 
+      + data.properties.right_district
+      + '</p> <p class="info-window__section"><span class="info-window__category">4-Year High School Graduation Rate</span><br />'
+      + data.properties.right_all_grad_p
+      + '</p> <p class="info-window__section"><span class="info-window__category">School Year</span><br />'
+      + data.properties.right_schoolyear
+      + '</p>'
+    }
+    else { 
+      return '<p class="info-window__section"><span class="info-window__category">Municipality (no data)</span><br />' 
+    + data.properties.town.slice(0,1) + data.properties.town.slice(1).toLowerCase()
+    + '</p>' 
+  }
 }
 
 function highSchoolCreateHeatmap(data){
@@ -76,13 +76,13 @@ function createBasemap(data) {
       .attr('stroke-width', '1')
       .attr('stroke-opacity', 0.6)
       .attr('d', path)
-      .on("mouseover", (d) => {
+      .on("mousemove", (d) => {
         tooltip.transition()
-        .duration(200)
+        .duration(50)
         .style("opacity", .9);
         tooltip.html(highSchoolHtmlValue(d))
-        .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 28) + "px");
+        .style("left", (d3.event.pageX + 10) + "px")
+        .style("top", (d3.event.pageY + 10) + "px");
       })
       .on("mouseleave", d => {
         tooltip.transition()
@@ -92,13 +92,11 @@ function createBasemap(data) {
       
   }
 
-d3.json('/assets/data/base-map.json').then((data) => {
-  createBasemap(data);
-  d3.json('/assets/data/Graduation_Rates_by_Districts.json').then(data => {
-    const legendVariable = "right_all_grad_p"
-    const title = "Graduation Rates by Districts"
-    const subtitle = "% 4-year High School Graduation"
-    highSchoolCreateHeatmap(data)
-    legend.addLegend(data, legendVariable, title, subtitle)
-  })
+Promise.all([
+  d3.json('/assets/data/base-map.json'),
+  d3.json('/assets/data/Graduation_Rates_by_Districts.json')
+]).then(data => {
+  createBasemap(data[0])
+  highSchoolCreateHeatmap(data[1])
+  legend.addLegend(data[1], "right_all_grad_p", "Graduation Rates by District", "% 4-year High School Graduation")
 })

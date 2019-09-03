@@ -6,7 +6,7 @@ const projection = d3.geoAlbers()
 
 
 function htmlValue(data) {
-  return data.properties.municipal + '<br />' + 'Years: ' + data.properties.right_years + '<br /> Value: ' + data.properties.right_all_art
+  return data.properties.municipal + '<br />' + 'Mean Travel Time: ' + data.properties.avgtt
 }
 
 function createHeatmap(data) {
@@ -15,8 +15,8 @@ function createHeatmap(data) {
                    .style("opacity", 0);
   const colors = d3.scaleSequentialQuantile()
       .interpolator(d3.interpolateRdPu)
-      .domain(data.features.map(feature => (feature.properties.right_all_art)));
-  const prematureMortalityMap = d3.select('.premature-mortality-map');
+      .domain(data.features.map(feature => (feature.properties.avgtt)));
+  const prematureMortalityMap = d3.select('.commute-map');
   const path = d3.geoPath().projection(projection);
   prematureMortalityMap.append('g')
     .attr('class', 'heatmap')
@@ -24,8 +24,8 @@ function createHeatmap(data) {
     .data(data.features)
     .enter()
     .append('path')
-    .attr('fill', d => colors(d.properties.right_all_art))
-    .attr('stroke', '#ffffff')
+    .attr('fill', d => colors(d.properties.avgtt))
+    .attr('stroke', '#000000')
     .attr('stroke-width', '1')
     .attr('stroke-opacity', 0.6)
     .attr('d', path)
@@ -39,7 +39,6 @@ function createHeatmap(data) {
       }) ;
 }
 
-d3.json('/assets/data/premature-mortality-3.geojson').then((data) => {
-  console.log(data);
+d3.json('/assets/data/ma_municipalities_merge(1).geojson').then((data) => {
   createHeatmap(data);
 })

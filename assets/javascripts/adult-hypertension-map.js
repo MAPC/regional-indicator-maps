@@ -8,20 +8,21 @@ const hypertensionProjection = d3.geoAlbers()
 
 
 function hypertensionHtmlValue(data) {
-  const windowWithData = '<p class="info-window__section"><span class="info-window__category">Municipality</span><br />' 
-  + data.properties.municipal 
-  + '</p> <p class="info-window__section"><span class="info-window__category">Year</span><br />'
-  + data.properties.right_cal_years
-  + '</p> <p class="info-window__section"><span class="info-window__category">Age-adjusted rate per 100,000</span><br />'
-  + data.properties.right_hyp_arte
-  + '</p>'
-
-  const windowWithoutData = '<p class="info-window__section"><span class="info-window__category">Municipality (no data)</span><br />' 
-  + data.properties.municipal 
-
-    if (data.properties.right_hyp_arte) { return windowWithData }
-    else { return windowWithoutData }
+  if (data.properties.right_hyp_arte) {
+    return '<p class="info-window__section"><span class="info-window__category">Municipality</span><br />' 
+    + data.properties.municipal 
+    + '</p> <p class="info-window__section"><span class="info-window__category">Year</span><br />'
+    + data.properties.right_cal_years
+    + '</p> <p class="info-window__section"><span class="info-window__category">Age-adjusted rate per 100,000</span><br />'
+    + data.properties.right_hyp_arte
+    + '</p>'
+  }
+  else {
+    return '<p class="info-window__section"><span class="info-window__category">Municipality (no data)</span><br />' 
+    + data.properties.municipal
+  }
 }
+
 function hypertensionCreateHeatmap(data) {
 
   const tooltip = d3.select("body").append("div")
@@ -61,9 +62,6 @@ function hypertensionCreateHeatmap(data) {
 }
 
 d3.json('/assets/data/hypertension-hospitalization-rate.json').then((data) => {
-  const legendProperty = "right_hyp_arte"
-  const title = "Hypertension Hospitalizations"
-  const subtitle = "Age-Adjusted Rate per 100,000"
   hypertensionCreateHeatmap(data);
-  legend.addLegend(data, legendProperty, title, subtitle)
+  legend.addLegend(data, "right_hyp_arte", "Hypertension Hospitalizations", "Age-Adjusted Rate per 100,000")
 })

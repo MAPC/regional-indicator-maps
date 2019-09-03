@@ -7,20 +7,21 @@ const asthmaProjection = d3.geoAlbers()
 .translate([960 / 2, 500 / 2]);
 
 function asthmaHtmlValue(data) {
-  const windowWithData = '<p class="info-window__section"><span class="info-window__category">Municipality</span><br />' 
-  + data.properties.municipal
-  + '</p> <p class="info-window__section"><span class="info-window__category">Age-adjusted rate per 100,000</span><br />'
-  + data.properties.right_yasth_arte
-  + '</p> <p class="info-window__section"><span class="info-window__category">Year</span><br />'
-  + data.properties.right_cal_years
-  + '</p>'
 
-  const windowWithoutData = '<p class="info-window__section"><span class="info-window__category">Municipality (no data)</span><br />' 
-  + data.properties.municipal
-  + '</p>'
-
-    if (data.properties.right_yasth_arte) { return windowWithData }
-    else { return windowWithoutData }
+    if (data.properties.right_yasth_arte) {
+      return '<p class="info-window__section"><span class="info-window__category">Municipality</span><br />' 
+      + data.properties.municipal
+      + '</p> <p class="info-window__section"><span class="info-window__category">Age-adjusted rate per 100,000</span><br />'
+      + data.properties.right_yasth_arte
+      + '</p> <p class="info-window__section"><span class="info-window__category">Year</span><br />'
+      + data.properties.right_cal_years
+      + '</p>'
+    }
+    else { 
+      return '<p class="info-window__section"><span class="info-window__category">Municipality (no data)</span><br />' 
+    + data.properties.town.slice(0,1) + data.properties.town.slice(1).toLowerCase()
+    + '</p>' 
+  }
 }
 
 function asthmaCreateHeatmap(data) {
@@ -91,13 +92,11 @@ function createBasemap(data) {
       })
 }
 
-d3.json('/assets/data/base-map.json').then((data) => {
-  createBasemap(data);
-  d3.json('/assets/data/youth-asthma-hosp.json').then((data) => {
-    const legendVariable = "right_yasth_arte"
-    const title = "Youth Asthma Hospitalization Rate"
-    const subtitle = "Age-Adjusted Rate per 100,000"
-    asthmaCreateHeatmap(data);
-    legend.addLegend(data, legendVariable, title, subtitle)
-  })
+Promise.all([
+  d3.json('/assets/data/base-map.json'),
+  d3.json('/assets/data/youth-asthma-hosp.json')
+]).then(data => {
+  createBasemap(data[0]);
+  asthmaCreateHeatmap(data[1])
+  legend.addLegend(data[1], "right_yasth_arte", "Youth Asthma Hospitalization Rate", "Age-Adjusted Rate per 100,000")
 })

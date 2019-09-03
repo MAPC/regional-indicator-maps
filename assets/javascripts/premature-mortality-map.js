@@ -8,15 +8,13 @@ const projection = d3.geoAlbers()
 
 
 function htmlValue(data) {
-  const windowWithData = '<p class="info-window__section"><span class="info-window__category">Municipality</span><br />' 
-  + data.properties.municipal
-  + '</p> <p class="info-window__section"><span class="info-window__category">Age-adjusted rate per 100,000</span><br />'
-  + data.properties.right_all_art
-  + '</p> <p class="info-window__section"><span class="info-window__category">Years</span><br />'
-  + data.properties.right_years
-  + '</p>'
-
-  return windowWithData
+  return '<p class="info-window__section"><span class="info-window__category">Municipality</span><br />' 
+    + data.properties.municipal
+    + '</p> <p class="info-window__section"><span class="info-window__category">Age-adjusted rate per 100,000</span><br />'
+    + data.properties.right_all_art
+    + '</p> <p class="info-window__section"><span class="info-window__category">Years</span><br />'
+    + data.properties.right_years
+    + '</p>'
 }
 
 function createHeatmap(data) {
@@ -55,9 +53,6 @@ function createHeatmap(data) {
 }
 
 d3.json('/assets/data/premature-mortality.json').then((data) => {
-  const legendVariable = "right_all_art"
-  const title = "Premature Mortality"
-  const subtitle = "Age-adjusted rate per 100,000"
   createHeatmap(data);
-  legend.addLegend(data, legendVariable, title, subtitle)
+  legend.addLegend(data, "right_all_art", "Premature Mortality", "Age-Adjusted rate per 100,000")
 })

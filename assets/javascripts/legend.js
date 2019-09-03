@@ -1,5 +1,4 @@
 export function addLegend(data, legendVariable, title, subtitle){
-  console.log(arguments)
   let nonNulls = 0
   let min = data.features[0].properties[legendVariable.valueOf()]
   let max = data.features[0].properties[legendVariable.valueOf()]
@@ -21,18 +20,15 @@ export function addLegend(data, legendVariable, title, subtitle){
   avg = (avg/nonNulls).toFixed(1)
   min = min.toFixed(1)
   max = max.toFixed(1)
-
-  console.log(`Min: ${min}`)
-  console.log(`Max: ${max}`)
-  console.log(`Avg: ${avg}`)
-  var w = 345, h = 100;
   
-  var key = d3.select(".legend")
+  const w = 345, h = 100;
+  
+  const key = d3.select(".legend")
   .append("svg")
   .attr("width", w)
   .attr("height", h)
 
-  var legend = key.append("defs")
+  const legend = key.append("defs")
   .append("svg:linearGradient")
   .attr("id", "gradient")
 
@@ -110,11 +106,11 @@ export function addLegend(data, legendVariable, title, subtitle){
   .style("fill", "url(#gradient)")
   .attr("transform", "translate(0,75)");
 
-  var y = d3.scaleLinear()
+  const y = d3.scaleLinear()
     .range([300, 0])
     .domain([max,min]);
 
-    var yAxis = d3.axisTop()
+  const yAxis = d3.axisTop()
     .scale(y)
     .ticks([max,min])
       

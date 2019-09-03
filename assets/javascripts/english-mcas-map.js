@@ -7,20 +7,20 @@ const englishProjection = d3.geoAlbers()
     .translate([960 / 2, 500 / 2])
 
 function englishHtmlValue(data){
-  const windowWithData = '<p class="info-window__section"><span class="info-window__category">District</span><br />' 
-  + data.properties.right_district
-  + '</p> <p class="info-window__section"><span class="info-window__category">% Proficient or Higher</span><br />'
-  + data.properties.right_all_pa_p
-  + '</p> <p class="info-window__section"><span class="info-window__category">School Year</span><br />'
-  + data.properties.right_schoolyear
-  + '</p>'
-
-  const windowWithoutData = '<p class="info-window__section"><span class="info-window__category">Municipality (no data)</span><br />' 
-  + data.properties.municipal
-  + '</p>'
-
-  if (data.properties.right_all_pa_p) { return windowWithData }
-  else { return windowWithoutData}
+  if (data.properties.right_all_pa_p) {
+    return '<p class="info-window__section"><span class="info-window__category">District</span><br />' 
+    + data.properties.right_district
+    + '</p> <p class="info-window__section"><span class="info-window__category">% Proficient or Higher</span><br />'
+    + data.properties.right_all_pa_p
+    + '</p> <p class="info-window__section"><span class="info-window__category">School Year</span><br />'
+    + data.properties.right_schoolyear
+    + '</p>'
+  }
+  else { 
+    return '<p class="info-window__section"><span class="info-window__category">Municipality (no data)</span><br />' 
+    + data.properties.town.slice(0,1) + data.properties.town.slice(1).toLowerCase()
+    + '</p>' 
+  }
 }
 
 function englishCreateHeatmap(data){
@@ -92,13 +92,11 @@ function createBasemap(data) {
     
 }
 
-d3.json('/assets/data/base-map.json').then((data) => {
-  createBasemap(data);
-  d3.json('/assets/data/3rd-grade-english-mcas.json').then(data => {
-    const title = "3rd Grade English MCAS Scores"
-    const subtitle = "% Proficient or Higher"
-    const legendVariable = "right_all_pa_p"
-    englishCreateHeatmap(data)
-    legend.addLegend(data, legendVariable, title, subtitle)
-  })
+Promise.all([
+  d3.json('/assets/data/base-map.json'),
+  d3.json('/assets/data/3rd-grade-english-mcas.json')
+]).then (data => {
+  createBasemap(data[0])
+  englishCreateHeatmap(data[1])
+  legend.addLegend(data[1], "right_all_pa_p", "3rd Grade English MCAS Scores", "% Proficient or Higher")
 })
