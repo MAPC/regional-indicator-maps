@@ -18,7 +18,7 @@ function englishHtmlValue(data){
   }
   else { 
     return '<p class="info-window__section"><span class="info-window__category">Municipality (no data)</span><br />' 
-    + data.properties.town.slice(0,1) + data.properties.town.slice(1).toLowerCase()
+    + data.properties.town
     + '</p>' 
   }
 }
