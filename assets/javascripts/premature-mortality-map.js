@@ -1,3 +1,5 @@
+import * as legend from './legend.js'
+
 const projection = d3.geoAlbers()
   .scale(19000)
   .rotate([71.057, 0])
@@ -6,7 +8,13 @@ const projection = d3.geoAlbers()
 
 
 function htmlValue(data) {
-  return data.properties.municipal + '<br />' + 'Years: ' + data.properties.right_years + '<br /> Value: ' + data.properties.right_all_art
+  return '<p class="info-window__section"><span class="info-window__category">Municipality</span><br />' 
+    + data.properties.municipal
+    + '</p> <p class="info-window__section"><span class="info-window__category">Age-adjusted rate per 100,000</span><br />'
+    + data.properties.right_all_art
+    + '</p> <p class="info-window__section"><span class="info-window__category">Years</span><br />'
+    + data.properties.right_years
+    + '</p>'
 }
 
 function createHeatmap(data) {
@@ -29,17 +37,22 @@ function createHeatmap(data) {
     .attr('stroke-width', '1')
     .attr('stroke-opacity', 0.6)
     .attr('d', path)
-    .on("mouseover", (d) => {
+    .on("mousemove", (d) => {
         tooltip.transition()
-        .duration(200)
+        .duration(50)
         .style("opacity", .9);
         tooltip.html(htmlValue(d))
-        .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 28) + "px");
-      }) ;
+        .style("left", (d3.event.pageX + 10) + "px")
+        .style("top", (d3.event.pageY + 10) + "px");
+      })
+      .on("mouseleave", d => {
+        tooltip.transition()
+        .duration(200)
+        .style("opacity",0)
+      })
 }
 
-d3.json('/assets/data/premature-mortality-3.geojson').then((data) => {
-  console.log(data);
+d3.json('/assets/data/premature-mortality.json').then((data) => {
   createHeatmap(data);
+  legend.addLegend(data, "right_all_art", "Premature Mortality", "Age-Adjusted rate per 100,000")
 })
