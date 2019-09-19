@@ -1,9 +1,9 @@
 import * as legend from './legend.js'
 
 const asthmaProjection = d3.geoAlbers()
-.scale(19000)
+.scale(45000)
 .rotate([71.057, 0])
-.center([-0.55, 42.38])
+.center([-.1, 42.45])
 .translate([960 / 2, 500 / 2]);
 
 function asthmaHtmlValue(data) {
