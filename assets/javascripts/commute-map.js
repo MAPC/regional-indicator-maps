@@ -1,7 +1,7 @@
 const projection = d3.geoAlbers()
 .scale(19000)
 .rotate([71.057, 0])
-.center([-0.55, 42.38])
+.center([-0.50,42.15])
 .translate([960 / 2, 500 / 2]);
 
 function htmlValue(data) {
@@ -129,7 +129,7 @@ function addLegend(data){
   .append("text")
   .attr("class", "legend-data")
   .text("40 minutes")
-  .attr("transform", "translate(290,60)")
+  .attr("transform", "translate(275,60)")
 }
 
 

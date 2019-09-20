@@ -4,5 +4,5 @@ title: "Premature Mortality"
 date: 2019-08-23 11:33:31 -0400
 ---
 <div class="legend"></div>
-<svg class="premature-mortality-map" viewBox="0 0 900 700"></svg>
+<svg class="premature-mortality-map" viewBox="0 0 900 560"></svg>
 <script src="{{'assets/javascripts/premature-mortality-map.js' | absolute_url }}" type="module"></script>
