@@ -93,8 +93,8 @@ function createBasemap(data) {
   }
 
 Promise.all([
-  d3.json('/assets/data/base-map.json'),
-  d3.json('/assets/data/Graduation_Rates_by_Districts.json')
+  d3.json('/regional-indicator-maps/assets/data/base-map.json'),
+  d3.json('/regional-indicator-maps/assets/data/Graduation_Rates_by_Districts.json')
 ]).then(data => {
   createBasemap(data[0])
   highSchoolCreateHeatmap(data[1])

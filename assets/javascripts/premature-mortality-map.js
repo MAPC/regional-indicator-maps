@@ -52,7 +52,7 @@ function createHeatmap(data) {
       })
 }
 
-d3.json('/assets/data/premature-mortality.json').then((data) => {
+d3.json('/regional-indicator-maps/assets/data/premature-mortality.json').then((data) => {
   createHeatmap(data);
   legend.addLegend(data, "right_all_art", "Premature Mortality", "Age-Adjusted rate per 100,000")
 })

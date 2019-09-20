@@ -61,7 +61,7 @@ function hypertensionCreateHeatmap(data) {
     })
 }
 
-d3.json('/assets/data/hypertension-hospitalization-rate.json').then((data) => {
+d3.json('/regional-indicator-maps/assets/data/hypertension-hospitalization-rate.json').then((data) => {
   hypertensionCreateHeatmap(data);
   legend.addLegend(data, "right_hyp_arte", "Hypertension Hospitalizations", "Age-Adjusted Rate per 100,000")
 })

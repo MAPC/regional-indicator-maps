@@ -93,8 +93,8 @@ function createBasemap(data) {
 }
 
 Promise.all([
-  d3.json('/assets/data/base-map.json'),
-  d3.json('/assets/data/3rd-grade-english-mcas.json')
+  d3.json('/regional-indicator-maps/assets/data/base-map.json'),
+  d3.json('/regional-indicator-maps/assets/data/3rd-grade-english-mcas.json')
 ]).then (data => {
   createBasemap(data[0])
   englishCreateHeatmap(data[1])

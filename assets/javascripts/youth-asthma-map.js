@@ -93,8 +93,8 @@ function createBasemap(data) {
 }
 
 Promise.all([
-  d3.json('/assets/data/base-map.json'),
-  d3.json('/assets/data/youth-asthma-hosp.json')
+  d3.json('/regional-indicator-maps/assets/data/base-map.json'),
+  d3.json('/regional-indicator-maps/assets/data/youth-asthma-hosp.json')
 ]).then(data => {
   createBasemap(data[0]);
   asthmaCreateHeatmap(data[1])

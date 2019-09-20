@@ -133,7 +133,7 @@ function addLegend(data){
 }
 
 
-d3.json('/assets/data/commute-times.json').then((data) => {
+d3.json('/regional-indicator-maps/assets/data/commute-times.json').then((data) => {
   createHeatmap(data);
   addLegend(data)
 })
