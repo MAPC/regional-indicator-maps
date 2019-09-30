@@ -1,4 +1,4 @@
-export function addLegend(data, legendVariable, title, subtitle){
+export function addLegend(data, legendVariable, subtitle){
   let nonNulls = 0
   let min = data.features[0].properties[legendVariable.valueOf()]
   let max = data.features[0].properties[legendVariable.valueOf()]
@@ -21,7 +21,7 @@ export function addLegend(data, legendVariable, title, subtitle){
   min = min.toFixed(1)
   max = max.toFixed(1)
   
-  const w = 345, h = 100;
+  const w = 345, h = 70;
   
   const key = d3.select(".legend")
   .append("svg")
@@ -83,17 +83,8 @@ export function addLegend(data, legendVariable, title, subtitle){
   .attr("stop-opacity", 1);
 
   key.append("text")
-  .attr("class", "legend-title")
-  .attr("transform", "translate(5,5)")
-  .attr("y", 0)
-  .attr("x", -5)
-  .attr("dy", ".71em")
-  .style("text-anchor", "start")
-  .text(title);
-
-  key.append("text")
   .attr("class", "legend-subtitle")
-  .attr("transform", "translate(5,35)")
+  .attr("transform", "translate(5,5)")
   .attr("y", 0)
   .attr("x", -5)
   .attr("dy", ".71em")
@@ -102,9 +93,9 @@ export function addLegend(data, legendVariable, title, subtitle){
 
   key.append("rect")
   .attr("width", 300)
-  .attr("height", 30)
+  .attr("height", 15)
   .style("fill", "url(#gradient)")
-  .attr("transform", "translate(0,75)");
+  .attr("transform", "translate(0,50)");
 
   const y = d3.scaleLinear()
     .range([300, 0])
@@ -118,18 +109,18 @@ export function addLegend(data, legendVariable, title, subtitle){
     .attr("class", "y-axis")
     .attr('width', 300)
     .attr("height", h  - 50)
-    .attr("transform", "translate(0,75)")
+    .attr("transform", "translate(0,50)")
     .call(yAxis)
 
   key.append("g")
     .append("text")
     .attr("class", "legend-data")
     .text(min)
-    .attr("transform", "translate(0,60)")
+    .attr("transform", "translate(0,40)")
   
     key.append("g")
     .append("text")
     .attr("class", "legend-data")
     .text(max)
-    .attr("transform", "translate(290,60)")
+    .attr("transform", "translate(290,40)")
 }

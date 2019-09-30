@@ -1,10 +1,10 @@
 import * as legend from './legend.js'
 
 const hypertensionProjection = d3.geoAlbers()
-  .scale(19000)
+  .scale(17500)
   .rotate([71.057, 0])
-  .center([-0.50,42.15])
-  .translate([960 / 2, 500 / 2]);
+  .center([-0.35,42.1])
+  .translate([960 / 2, 500 / 2])
 
 
 function hypertensionHtmlValue(data) {
@@ -20,6 +20,22 @@ function hypertensionHtmlValue(data) {
   else {
     return '<p class="info-window__section"><span class="info-window__category">Municipality (no data)</span><br />' 
     + data.properties.municipal
+  }
+}
+
+function tooltipLeft(event, tooltip){
+  if (event.pageX > 410) {
+    return event.pageX - tooltip.offsetWidth - 10 + "px"
+  } else {
+    return event.pageX + 10 + "px"
+  }
+}
+
+function tooltipTop(event, tooltip){
+  if (event.pageY > 260) {
+    return event.pageY - tooltip.offsetHeight - 10 + "px"
+  } else {
+    return event.pageY + 10 + "px"
   }
 }
 
@@ -51,8 +67,8 @@ function hypertensionCreateHeatmap(data) {
         .duration(50)
         .style("opacity", .9);
         tooltip.html(hypertensionHtmlValue(d))
-        .style("left", (d3.event.pageX + 10) + "px")
-        .style("top", (d3.event.pageY + 10) + "px");
+        .style("left", tooltipLeft(d3.event, document.getElementsByClassName('tooltip')[0]))
+        .style("top", tooltipTop(d3.event,  document.getElementsByClassName('tooltip')[0]))
       })
     .on("mouseleave", d => {
       tooltip.transition()
@@ -63,5 +79,5 @@ function hypertensionCreateHeatmap(data) {
 
 d3.json('/regional-indicator-maps/assets/data/hypertension-hospitalization-rate.json').then((data) => {
   hypertensionCreateHeatmap(data);
-  legend.addLegend(data, "right_hyp_arte", "Hypertension Hospitalizations", "Age-Adjusted Rate per 100,000")
+  legend.addLegend(data, "right_hyp_arte", "Age-Adjusted Rate per 100,000")
 })

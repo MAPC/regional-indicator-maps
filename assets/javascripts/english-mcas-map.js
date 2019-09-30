@@ -1,10 +1,10 @@
 import * as legend from './legend.js'
 
 const englishProjection = d3.geoAlbers()
-    .scale(19000)
-    .rotate([71.057, 0])
-    .center([-0.50,42.15])
-    .translate([960 / 2, 500 / 2])
+.scale(17500)
+.rotate([71.057, 0])
+.center([-0.35,42.1])
+.translate([960 / 2, 500 / 2])
 
 function englishHtmlValue(data){
   if (data.properties.right_all_pa_p) {
@@ -20,6 +20,22 @@ function englishHtmlValue(data){
     return '<p class="info-window__section"><span class="info-window__category">Municipality (no data)</span><br />' 
     + data.properties.town
     + '</p>' 
+  }
+}
+
+function tooltipLeft(event, tooltip){
+  if (event.pageX > 410) {
+    return event.pageX - tooltip.offsetWidth - 10 + "px"
+  } else {
+    return event.pageX + 10 + "px"
+  }
+}
+
+function tooltipTop(event, tooltip){
+  if (event.pageY > 260) {
+    return event.pageY - tooltip.offsetHeight - 10 + "px"
+  } else {
+    return event.pageY + 10 + "px"
   }
 }
 
@@ -48,8 +64,8 @@ function englishCreateHeatmap(data){
                 .duration(50)
                 .style("opacity", .9);
                 tooltip.html(englishHtmlValue(d))
-                .style("left", (d3.event.pageX + 10) + "px")
-                .style("top", (d3.event.pageY + 10) + "px");
+                .style("left", tooltipLeft(d3.event, document.getElementsByClassName('tooltip')[1]))
+                .style("top", tooltipTop(d3.event,  document.getElementsByClassName('tooltip')[1]))
                 }) 
               .on("mouseleave", d => {
                 tooltip.transition()
@@ -81,8 +97,8 @@ function createBasemap(data) {
       .duration(50)
       .style("opacity", .9);
       tooltip.html(englishHtmlValue(d))
-      .style("left", (d3.event.pageX + 10) + "px")
-      .style("top", (d3.event.pageY + 10) + "px");
+      .style("left", tooltipLeft(d3.event, document.getElementsByClassName('tooltip')[0]))
+      .style("top", tooltipTop(d3.event,  document.getElementsByClassName('tooltip')[0]))
     })
     .on("mouseleave", d => {
       tooltip.transition()
@@ -98,5 +114,5 @@ Promise.all([
 ]).then (data => {
   createBasemap(data[0])
   englishCreateHeatmap(data[1])
-  legend.addLegend(data[1], "right_all_pa_p", "3rd Grade English MCAS Scores", "% Proficient or Higher")
+  legend.addLegend(data[1], "right_all_pa_p", "% Proficient or Higher")
 })

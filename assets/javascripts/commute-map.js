@@ -1,8 +1,8 @@
 const projection = d3.geoAlbers()
-.scale(19000)
+.scale(17500)
 .rotate([71.057, 0])
-.center([-0.50,42.15])
-.translate([960 / 2, 500 / 2]);
+.center([-0.35,42.1])
+.translate([960 / 2, 500 / 2])
 
 function htmlValue(data) {
   return '<p class="info-window__section"><span class="info-window__category">Municipality</span><br />' 
@@ -12,6 +12,22 @@ function htmlValue(data) {
   + '</p>'
 }
 
+function tooltipLeft(event, tooltip){
+  if (event.pageX > 410) {
+    return event.pageX - tooltip.offsetWidth - 10 + "px"
+  } else {
+    return event.pageX + 10 + "px"
+  }
+}
+
+function tooltipTop(event, tooltip){
+  if (event.pageY > 260) {
+    return event.pageY - tooltip.offsetHeight - 10 + "px"
+  } else {
+    return event.pageY + 10 + "px"
+  }
+}
+
 function createHeatmap(data) {
   const tooltip = d3.select("body").append("div")
                    .attr("class", "tooltip")
@@ -19,9 +35,9 @@ function createHeatmap(data) {
   const colors = d3.scaleSequentialQuantile()
       .interpolator(d3.interpolateYlOrRd)
       .domain(data.features.map(feature => (feature.properties.avgtt)));
-  const prematureMortalityMap = d3.select('.commute-map');
+  const commuteMap = d3.select('.commute-map');
   const path = d3.geoPath().projection(projection);
-  prematureMortalityMap.append('g')
+  commuteMap.append('g')
     .attr('class', 'heatmap')
     .style("border","1px solid red")
     .selectAll('path')
@@ -40,8 +56,8 @@ function createHeatmap(data) {
         .duration(50)
         .style("opacity", .9);
         tooltip.html(htmlValue(d))
-        .style("left", (d3.event.pageX + 10) + "px")
-        .style("top", (d3.event.pageY + 10) + "px");
+        .style("left", tooltipLeft(d3.event, document.getElementsByClassName('tooltip')[0]))
+        .style("top", tooltipTop(d3.event,  document.getElementsByClassName('tooltip')[0]))
       })
     .on("mouseleave", d => {
         tooltip.transition()
@@ -51,7 +67,7 @@ function createHeatmap(data) {
 }
 
 function addLegend(data){
-  var w = 350, h = 100;
+  var w = 345, h = 70;
   var key = d3.select(".legend")
   .append("svg")
   .attr("width", w)
@@ -59,32 +75,32 @@ function addLegend(data){
 
   key.append("rect")
   .attr('width', 70)
-  .attr("height", h  - 50)
-  .attr("transform", "translate(0,75)")
+  .attr("height", 15)
+  .attr("transform", "translate(0,50)")
   .attr("fill", "#FFFFB2")
 
   key.append("rect")
   .attr('width', 70)
-  .attr("height", h  - 50)
-  .attr("transform", "translate(70,75)")
+  .attr("height", 15)
+  .attr("transform", "translate(70,50)")
   .attr("fill", "#FECC5C")
 
   key.append("rect")
   .attr('width', 70)
-  .attr("height", h  - 50)
-  .attr("transform", "translate(140,75)")
+  .attr("height", 15)
+  .attr("transform", "translate(140,50)")
   .attr("fill", "#FD8D3C")
 
   key.append("rect")
   .attr('width', 70)
-  .attr("height", h  - 50)
-  .attr("transform", "translate(210,75)")
+  .attr("height", 15)
+  .attr("transform", "translate(210,50)")
   .attr("fill", "#F03B20")
 
   key.append("rect")
   .attr('width', 70)
-  .attr("height", h  - 50)
-  .attr("transform", "translate(280,75)")
+  .attr("height", 15)
+  .attr("transform", "translate(280,50)")
   .attr("fill", "#BD0026")
 
   var y = d3.scaleLinear()
@@ -102,34 +118,25 @@ function addLegend(data){
   .attr("transform", "translate(0,75)")
 
   key.append("text")
-  .attr("class", "legend-title")
+  .attr("class", "legend-subtitle")
   .attr("transform", "translate(5,5)")
   .attr("y", 0)
   .attr("x", -5)
   .attr("dy", ".71em")
   .style("text-anchor", "start")
-  .text("Mean Travel Time to Work from Home");
-
-  key.append("text")
-  .attr("class", "legend-subtitle")
-  .attr("transform", "translate(5,35)")
-  .attr("y", 0)
-  .attr("x", -5)
-  .attr("dy", ".71em")
-  .style("text-anchor", "start")
-  .text("(2010-2014 AVG)");
+  .text("2010-2014 Average");
 
   key.append("g")
   .append("text")
   .attr("class", "legend-data")
   .text("10")
-  .attr("transform", "translate(0,60)")
+  .attr("transform", "translate(0,40)")
   
   key.append("g")
   .append("text")
   .attr("class", "legend-data")
   .text("40 minutes")
-  .attr("transform", "translate(275,60)")
+  .attr("transform", "translate(270,40)")
 }
 
 

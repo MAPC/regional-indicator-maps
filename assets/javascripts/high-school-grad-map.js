@@ -1,9 +1,9 @@
 import * as legend from './legend.js'
 
 const highSchoolProjection = d3.geoAlbers()
-    .scale(19000)
+    .scale(17500)
     .rotate([71.057, 0])
-    .center([-0.50,42.15])
+    .center([-0.35,42.1])
     .translate([960 / 2, 500 / 2])
 
 function highSchoolHtmlValue(data){
@@ -48,14 +48,30 @@ function highSchoolCreateHeatmap(data){
                 .duration(50)
                 .style("opacity",.9)
                 tooltip.html(highSchoolHtmlValue(d))
-                .style("left", (d3.event.pageX + 10) + "px")
-                .style("top", (d3.event.pageY + 10) + "px");
+                .style("left", tooltipLeft(d3.event, document.getElementsByClassName('tooltip')[1]))
+                .style("top", tooltipTop(d3.event,  document.getElementsByClassName('tooltip')[1]))
             })
             .on("mouseleave", d => {
                 tooltip.transition()
                 .duration(200)
                 .style("opacity",0)
             })
+}
+
+function tooltipLeft(event, tooltip){
+  if (event.pageX > 410) {
+    return event.pageX - tooltip.offsetWidth - 10 + "px"
+  } else {
+    return event.pageX + 10 + "px"
+  }
+}
+
+function tooltipTop(event, tooltip){
+  if (event.pageY > 260) {
+    return event.pageY - tooltip.offsetHeight - 10 + "px"
+  } else {
+    return event.pageY + 10 + "px"
+  }
 }
 
 function createBasemap(data) {
@@ -81,8 +97,8 @@ function createBasemap(data) {
         .duration(50)
         .style("opacity", .9);
         tooltip.html(highSchoolHtmlValue(d))
-        .style("left", (d3.event.pageX + 10) + "px")
-        .style("top", (d3.event.pageY + 10) + "px");
+          .style("left", tooltipLeft(d3.event, document.getElementsByClassName('tooltip')[0]))
+          .style("top", tooltipTop(d3.event,  document.getElementsByClassName('tooltip')[0]))
       })
       .on("mouseleave", d => {
         tooltip.transition()
@@ -98,5 +114,5 @@ Promise.all([
 ]).then(data => {
   createBasemap(data[0])
   highSchoolCreateHeatmap(data[1])
-  legend.addLegend(data[1], "right_all_grad_p", "Graduation Rates by District", "% 4-year High School Graduation")
+  legend.addLegend(data[1], "right_all_grad_p", "% 4-Year High School Graduation")
 })

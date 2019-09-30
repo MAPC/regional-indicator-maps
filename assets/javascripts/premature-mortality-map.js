@@ -1,11 +1,10 @@
 import * as legend from './legend.js'
 
 const projection = d3.geoAlbers()
-  .scale(19000)
+  .scale(17500)
   .rotate([71.057, 0])
-  .center([-0.50,42.15])
-  .translate([960 / 2, 500 / 2]);
-
+  .center([-0.35,42.1])
+  .translate([960 / 2, 500 / 2])
 
 function htmlValue(data) {
   return '<p class="info-window__section"><span class="info-window__category">Municipality</span><br />' 
@@ -17,6 +16,21 @@ function htmlValue(data) {
     + '</p>'
 }
 
+function tooltipLeft(event, tooltip){
+  if (event.pageX > 410) {
+    return event.pageX - tooltip.offsetWidth - 10 + "px"
+  } else {
+    return event.pageX + 10 + "px"
+  }
+}
+
+function tooltipTop(event, tooltip){
+  if (event.pageY > 260) {
+    return event.pageY - tooltip.offsetHeight - 10 + "px"
+  } else {
+    return event.pageY + 10 + "px"
+  }
+}
 function createHeatmap(data) {
   const tooltip = d3.select("body").append("div")
                    .attr("class", "tooltip")
@@ -42,8 +56,8 @@ function createHeatmap(data) {
         .duration(50)
         .style("opacity", .9);
         tooltip.html(htmlValue(d))
-        .style("left", (d3.event.pageX + 10) + "px")
-        .style("top", (d3.event.pageY + 10) + "px");
+        .style("left", tooltipLeft(d3.event, document.getElementsByClassName('tooltip')[0]))
+        .style("top", tooltipTop(d3.event,  document.getElementsByClassName('tooltip')[0]))
       })
       .on("mouseleave", d => {
         tooltip.transition()
@@ -54,5 +68,5 @@ function createHeatmap(data) {
 
 d3.json('/regional-indicator-maps/assets/data/premature-mortality.json').then((data) => {
   createHeatmap(data);
-  legend.addLegend(data, "right_all_art", "Premature Mortality", "Age-Adjusted rate per 100,000")
+  legend.addLegend(data, "right_all_art", "Age-Adjusted rate per 100,000")
 })
