@@ -1,7 +1,7 @@
 export function addLegend(data, legendVariable, subtitle){
   let nonNulls = 0
-  let min = data.features[0].properties[legendVariable.valueOf()]
-  let max = data.features[0].properties[legendVariable.valueOf()]
+  let min = +data.features[0].properties[legendVariable.valueOf()]
+  let max = 0
   let avg = 0
     
   data.features.forEach(dataPoint => {
@@ -10,13 +10,14 @@ export function addLegend(data, legendVariable, subtitle){
       avg += dataPoint.properties[legendVariable.valueOf()]
 
       if (dataPoint.properties[legendVariable.valueOf()] > max){
-        max = dataPoint.properties[legendVariable.valueOf()]
+        max = +dataPoint.properties[legendVariable.valueOf()]
       }
       if (dataPoint.properties[legendVariable.valueOf()] < min){
-        min = dataPoint.properties[legendVariable.valueOf()]
+        min = +dataPoint.properties[legendVariable.valueOf()]
       }
     }
   })
+
   avg = (avg/nonNulls).toFixed(1)
   min = min.toFixed(1)
   max = max.toFixed(1)

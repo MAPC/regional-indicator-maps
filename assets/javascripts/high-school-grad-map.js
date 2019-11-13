@@ -7,13 +7,13 @@ const highSchoolProjection = d3.geoAlbers()
     .translate([960 / 2, 500 / 2])
 
 function highSchoolHtmlValue(data){
-    if (data.properties.right_all_grad_p) { 
+    if (data.properties.all_grad_p) { 
       return '<p class="info-window__section"><span class="info-window__category">District</span><br />' 
-      + data.properties.right_district
+      + data.properties.district
       + '</p> <p class="info-window__section"><span class="info-window__category">4-Year High School Graduation Rate</span><br />'
-      + data.properties.right_all_grad_p
+      + data.properties.all_grad_p
       + '</p> <p class="info-window__section"><span class="info-window__category">School Year</span><br />'
-      + data.properties.right_schoolyear
+      + data.properties.schoolyear
       + '</p>'
     }
     else { 
@@ -29,7 +29,7 @@ function highSchoolCreateHeatmap(data){
                     .style("opacity",0)
     const colors = d3.scaleSequentialQuantile()
                     .interpolator(d3.interpolateRdPu)
-                    .domain(data.features.map(feature => feature.properties.right_all_grad_p))
+                    .domain(data.features.map(feature => +feature.properties.all_grad_p))
     const highSchoolhMap = d3.select('.high-school-grad-map')
     const path = d3.geoPath().projection(highSchoolProjection)
     highSchoolhMap.append('g')
@@ -38,7 +38,7 @@ function highSchoolCreateHeatmap(data){
             .data(data.features)
             .enter()
             .append('path')
-            .attr('fill', d => { return colors(d.properties.right_all_grad_p)})
+            .attr('fill', d => { return colors(d.properties.all_grad_p)})
             .attr('stroke','#ffffff')
             .attr('stroke-width','1')
             .attr('stroke-opacity', 0.6)
@@ -110,9 +110,9 @@ function createBasemap(data) {
 
 Promise.all([
   d3.json('/regional-indicator-maps/assets/data/base-map.json'),
-  d3.json('/regional-indicator-maps/assets/data/Graduation_Rates_by_Districts.json')
+  d3.json('/regional-indicator-maps/assets/data/Grad_Rates_by_District.geojson')
 ]).then(data => {
   createBasemap(data[0])
   highSchoolCreateHeatmap(data[1])
-  legend.addLegend(data[1], "right_all_grad_p", "% 4-Year High School Graduation")
+  legend.addLegend(data[1], "all_grad_p", "% 4-Year High School Graduation (2014-2015)")
 })
